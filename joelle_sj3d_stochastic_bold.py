@@ -98,7 +98,7 @@ for (K11i, K12i, K21i) in product(K11,K12,K21):
     # white_matter = connectivity.Connectivity.from_file(source_file="/Users/jzimmermann/Documents/PHD_Thesis/Connectivity_zips/AJ_20140516_1600_Connectivity.zip", instance=None) ## source_file should be absolute path to connectivity.zip. If not, itll take the whole tvb path
     white_matter = from_file(source_file="/Users/jzimmermann/Documents/PHD_Thesis/Connectivity_zips/AA_20120815_Connectivity.zip", instance=None) ## source_file should be absolute path to connectivity.zip. If not, itll take the whole tvb path
 
-
+    # testing git only
 
     white_matter.speed = numpy.array([4.0])
     white_matter_coupling = coupling.Linear(a=0.033)
