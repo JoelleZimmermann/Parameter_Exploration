@@ -45,8 +45,13 @@ from tvb.basic.readers import ZipReader, try_get_absolute_path
 from itertools import product
 import numpy
 
-# From connectivity.Connectivity - copied here and modified to match filesnames of Berlin connectivity .txts in connectivity.zip (ie orientation.txt rather than average_orientations.txt)
 def from_file(source_file="nonexistent.zip", instance=None):
+    '''
+    Borrowed from connectivity.Connectivity - copied here and modified to match filesnames of Berlin connectivity .txts in connectivity.zip (ie orientation.txt rather than average_orientations.txt)
+    :param source_file:
+    :param instance:
+    :return: Connectivity object from source_file.
+    '''
 
     if instance is None:
         result = connectivity.Connectivity()
@@ -94,11 +99,10 @@ for (K11i, K12i, K21i) in product(K11,K12,K21):
     oscillator = models.ReducedSetHindmarshRose(K11=K11i, K12=K12i, K21=K21i) # Stefanescu-Jirsa
 
 
-    #white_matter = connectivity.Connectivity(load_default=True)
+    white_matter = connectivity.Connectivity(load_default=True)
     # white_matter = connectivity.Connectivity.from_file(source_file="/Users/jzimmermann/Documents/PHD_Thesis/Connectivity_zips/AJ_20140516_1600_Connectivity.zip", instance=None) ## source_file should be absolute path to connectivity.zip. If not, itll take the whole tvb path
-    white_matter = from_file(source_file="/Users/jzimmermann/Documents/PHD_Thesis/Connectivity_zips/AA_20120815_Connectivity.zip", instance=None) ## source_file should be absolute path to connectivity.zip. If not, itll take the whole tvb path
+    # white_matter = from_file(source_file="/Users/jzimmermann/Documents/PHD_Thesis/Connectivity_zips/AA_20120815_Connectivity.zip", instance=None) ## source_file should be absolute path to connectivity.zip. If not, itll take the whole tvb path
 
-    # testing git only
 
     white_matter.speed = numpy.array([4.0])
     white_matter_coupling = coupling.Linear(a=0.033)
