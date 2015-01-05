@@ -15,7 +15,7 @@ class Subject_Simulation(object):
 
     # has functions to: runs simulations, comput FC from time series
 
-    def prepare_and_run(self, K11, K12, K21, simulation_length):
+    def prepare_and_run(self, K11, K12, K21, simulation_length, period_length):
 
         # return: dict of parameters used in the calculation,
         #         and corresponding calculated time and series
@@ -26,14 +26,14 @@ class Subject_Simulation(object):
         #     'params' : { 'K11' : 0.1, 'K12' : 0.2, 'K21' : 0.3 },
         #     'time_with_regions_data' :
         #       { <- OrderedDict()
-        #       0.1  : [1.1, 2.1 .. 68 regions ], <- throw away later, e.g till 0.4 - still returned
+        #       500  : [1.1, 2.1 .. 68 regions ], <- throw away later, e.g till 0.4 - still returned
         #       ...
-        #       0.4  : [1.4, 2.4 .. 68 regions ], <- throw away later, e.g till 0.4 - still returned
+        #       1000  : [1.4, 2.4 .. 68 regions ], <- throw away later, e.g till 0.4 - still returned
         #
-        #       0.5  : [1.5, 2.5 .. 68 regions ], <- first returned
-        #       0.6  : [1.6, 2.6 .. 68 regions ],
+        #       1500  : [1.5, 2.5 .. 68 regions ], <- first returned
+        #       2000  : [1.6, 2.6 .. 68 regions ],
         #       ...
-        #       10.0 : [1.10, 2.10 .. 68 regions ],
+        #       10000 : [1.10, 2.10 .. 68 regions ],
         #       },
         #     'simfc' :  array(    <- 68x68 # this third key val pair is added later in add_simfc_to
         #          0.2, 0.3 .. 68 regions]
@@ -66,7 +66,7 @@ class Subject_Simulation(object):
         # Initialise a Monitor with period in physical time
         # what_to_watch = monitors.TemporalAverage(period=0.48828125)     # 2048Hz => period=1000.0/2048.0
         # what_to_watch = monitors.Bold(period=500)  # The default BOLD hrf kernal is voltera kernal.
-        what_to_watch = monitors.Bold(period=500, hrf_kernel=equations.Gamma()) # Set hemodynamic response function (hrf) to gamma kernal rather than the voltera kernal
+        what_to_watch = monitors.Bold(period=period_length, hrf_kernel=equations.Gamma()) # Set hemodynamic response function (hrf) to gamma kernal rather than the voltera kernal
 
         # Initialise a Simulator -- Model, Connectivity, Integrator, and Monitors.
         sim = simulator.Simulator(model=oscillator, connectivity=self.subject.empsc,
