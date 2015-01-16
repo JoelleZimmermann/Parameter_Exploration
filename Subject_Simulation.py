@@ -15,7 +15,7 @@ class Subject_Simulation(object):
 
     # has functions to: runs simulations, comput FC from time series
 
-    def prepare_and_run(self, K11, K12, K21, simulation_length, period_length):
+    def prepare_and_run(self, what_to_watch, K11, K12, K21, simulation_length, period_length):
 
         # return: dict of parameters used in the calculation,
         #         and corresponding calculated time and series
@@ -63,10 +63,6 @@ class Subject_Simulation(object):
         hiss = noise.Additive(nsig=numpy.array([2 ** -10, ])) # if i try with default value of nsig (=1.0), it overflows (nsig is D)
         heunint = integrators.HeunStochastic(dt=0.06103515625, noise=hiss) #dt is integration step size
 
-        # Initialise a Monitor with period in physical time
-        # what_to_watch = monitors.TemporalAverage(period=0.48828125)     # 2048Hz => period=1000.0/2048.0
-        # what_to_watch = monitors.Bold(period=500)  # The default BOLD hrf kernal is voltera kernal.
-        what_to_watch = monitors.Bold(period=period_length, hrf_kernel=equations.Gamma()) # Set hemodynamic response function (hrf) to gamma kernal rather than the voltera kernal
 
         # Initialise a Simulator -- Model, Connectivity, Integrator, and Monitors.
         sim = simulator.Simulator(model=oscillator, connectivity=self.subject.empsc,

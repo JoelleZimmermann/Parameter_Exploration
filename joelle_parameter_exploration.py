@@ -10,6 +10,7 @@ from remove_beg_of_ts import remove_beg_of_ts
 from find_ideal_params import find_ideal_params_using_fc
 import pickle
 from find_ideal_params import add_corr_to, add_simfc_to
+from tvb.simulator.lab import *
 
 # command line: to add current dir to python path: cd /Users/jzimmermann/Documents/PHD_Thesis/Python_stuff/My_tvb/Parameter_Exploration THEN import sys THEN sys.path.append('.')
 
@@ -35,7 +36,10 @@ for subject_id in subject_ids:
 
     for (K11, K12, K21) in product(K11range, K12range, K21range):
 
-        sim_result = sub_sim.prepare_and_run(K11=K11, K12=K12, K21=K21, simulation_length=simulation_length_PE, period_length=period_length)  #calling prepare_and_run for one combo of params, result will be a big dictionary
+        # what_to_watch = monitors.TemporalAverage(period=0.48828125)     # 2048Hz => period=1000.0/2048.0
+        what_to_watch = monitors.Bold(period=period_length, hrf_kernel=equations.Gamma()) # Set hemodynamic response function (hrf) to gamma kernal rather than the voltera kernal
+
+        sim_result = sub_sim.prepare_and_run(what_to_watch = what_to_watch, K11=K11, K12=K12, K21=K21, simulation_length=simulation_length_PE, period_length=period_length)  #calling prepare_and_run for one combo of params, result will be a big dictionary
 
         sim_results.append( sim_result )
 
@@ -48,8 +52,10 @@ for subject_id in subject_ids:
 
     ideal_params = find_ideal_params_using_fc(sim_results, sub.empfc)
 
+
+    what_to_watch = monitors.Bold(period=period_length, hrf_kernel=equations.Gamma()) # Set hemodynamic response function (hrf) to gamma kernal rather than the voltera kernal
     # run the sim with these ideal params we have identified:
-    sim_result_for_ideal_params = sub_sim.prepare_and_run(K11=ideal_params['K11'], K12=ideal_params['K12'], K21=ideal_params['K21'], simulation_length=simulation_length_sim, period_length=period_length)
+    sim_result_for_ideal_params = sub_sim.prepare_and_run(what_to_watch = what_to_watch, K11=ideal_params['K11'], K12=ideal_params['K12'], K21=ideal_params['K21'], simulation_length=simulation_length_sim, period_length=period_length)
 
     sim_result_for_ideal_params = remove_beg_of_ts([sim_result_for_ideal_params], throwaway_length)[0]
 
