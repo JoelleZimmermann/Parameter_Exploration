@@ -9,16 +9,17 @@ from Ideal_Measure import FC_Ideal_Measure, Ideal_Measure
 from remove_beg_of_ts import remove_beg_of_ts
 from find_ideal_params import find_ideal_params_using_fc
 import pickle
+from find_ideal_params import add_corr_to, add_simfc_to
 
 # command line: to add current dir to python path: cd /Users/jzimmermann/Documents/PHD_Thesis/Python_stuff/My_tvb/Parameter_Exploration THEN import sys THEN sys.path.append('.')
 
-K11range = numpy.r_[.5:1:.5]
-K12range = numpy.r_[0:1:1]
-K21range = numpy.r_[1:2:1]
-simulation_length_PE = 2500
-simulation_length_sim = 3500
-throwaway_length = 1000
-period_length = 500
+K11range = numpy.r_[.1:1:.5] # [.1:1:.3]
+K12range = numpy.r_[.1:1:.5] # [.1:1:.3]
+K21range = numpy.r_[.1:1:.5] # [.1:1:.3]
+simulation_length_PE = 40000 # 60 sec
+simulation_length_sim = 60000 #180sec
+throwaway_length = 30000 # 20000ms
+period_length = 2000 # 2000 ms
 
 subject_ids = ['AA_20120815']
 
@@ -52,7 +53,12 @@ for subject_id in subject_ids:
 
     sim_result_for_ideal_params = remove_beg_of_ts([sim_result_for_ideal_params], throwaway_length)[0]
 
+    sim_result_for_ideal_params = add_simfc_to([sim_result_for_ideal_params])[0]                             # creates simFCs and adds the simfc key value (the third) pair to each sim_result
+
+    sim_result_for_ideal_params = add_corr_to([sim_result_for_ideal_params], sub.empfc)[0]
+
     print(sim_result_for_ideal_params) # prints sim_result of the ideal params.
 
-    pickle.dump(sim_result_for_ideal_params,open(subject_id + '_sim_result.pickle','wb')) # saves sim_result_for_ideal_params for a subject in a file
-    # b = pickle.load(open('AA_20120815_sim_result.pickle','r'))
+    # pickle.dump(sim_result_for_ideal_params,open(subject_id + '_sim_result.pickle','wb')) # saves sim_result_for_ideal_params for a subject in a file
+    pickle.dump(sim_result_for_ideal_params,open(subject_id + '_sim_result_2.pickle','wb'))
+    # b = pickle.load(open('AA_20120815_sim_result_with_corr.pickle','r'))
