@@ -15,7 +15,7 @@ class Subject_Simulation(object):
 
     # has functions to: runs simulations, comput FC from time series
 
-    def prepare_and_run(self, what_to_watch, K11, K12, K21, simulation_length, period_length):
+    def prepare_and_run(self, what_to_watch, linear_coupling, conduction_speed, K11, K12, K21, simulation_length, period_length):
 
         # return: dict of parameters used in the calculation,
         #         and corresponding calculated time and series
@@ -57,20 +57,16 @@ class Subject_Simulation(object):
         self.subject.empsc = from_file( source_file = self.subject.empsc_path, instance=None) ## source_file should be absolute path to connectivity.zip. If not, itll take the whole tvb path
         self.subject.empsc.speed = numpy.array([4.0])
 
-        empsc_coupling = coupling.Linear(a=0.00390625 * 10 ** (-3)) #a = 0.033
+        empsc_coupling = coupling.Linear(a=linear_coupling) #a = 0.033
+
 
         # Initialise an Integrator
         hiss = noise.Additive(nsig=numpy.array([2 ** -10, ])) # if i try with default value of nsig (=1.0), it overflows (nsig is D)
         heunint = integrators.HeunStochastic(dt=0.06103515625, noise=hiss) #dt is integration step size
 
-        # Initialise a Monitor with period in physical time
-        # what_to_watch = monitors.TemporalAverage(period=0.48828125)     # 2048Hz => period=1000.0/2048.0
-        # what_to_watch = monitors.Bold(period=500)  # The default BOLD hrf kernal is voltera kernal.
-        # what_to_watch = monitors.Bold(period=period_length, hrf_kernel=equations.Gamma()) # Set hemodynamic response function (hrf) to gamma kernal rather than the voltera kernal
-
         # Initialise a Simulator -- Model, Connectivity, Integrator, and Monitors.
         sim = simulator.Simulator(model=oscillator, connectivity=self.subject.empsc,
-                                  coupling=empsc_coupling,
+                                  coupling=empsc_coupling, conduction_speed=conduction_speed,
                                   integrator=heunint, monitors=what_to_watch)
 
         sim.configure()
@@ -84,12 +80,11 @@ class Subject_Simulation(object):
         params_mapped_to_time_with_regions_data['time_with_regions_data'] = OrderedDict()
 
         LOG.info("Starting simulation...")
-        for bold in sim(simulation_length):
-            if bold is not None:
-                # bold_time.append(bold[0][0])    # TODO:The first [0] is a hack for single monitor
-                # bold_data.append(bold[0][1])    # TODO:The first [0] is a hack for single monitor
-                params_mapped_to_time_with_regions_data['time_with_regions_data'].update({bold[0][0]:bold[0][1]})
-
+        for monitor_result in sim(simulation_length):
+            if monitor_result is not None:
+                # bold_time.append(monitor_result[0][0])    # TODO:The first [0] is a hack for single monitor
+                # bold_data.append(monitor_result[0][1])    # TODO:The first [0] is a hack for single monitor
+                params_mapped_to_time_with_regions_data['time_with_regions_data'].update({monitor_result[0][0]:monitor_result[0][1]})
 
         print params_mapped_to_time_with_regions_data
         return params_mapped_to_time_with_regions_data
