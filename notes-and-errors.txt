@@ -1,0 +1,8 @@
+ File "/Users/jzimmermann/Documents/PHD_Thesis/Python_stuff/My_tvb/Parameter_Exploration/joelle_parameter_exploration.py", line 86, in <module>
+    ideal_params = find_ideal_params_using_fc(sim_results, sub.empfc)
+  File "/Users/jzimmermann/Documents/PHD_Thesis/Python_stuff/My_tvb/Parameter_Exploration/find_ideal_params.py", line 41, in find_ideal_params_using_fc
+    sim_results = add_corr_to(sim_results, empfc)                       # updates sim_results dictionary with fourth keyval pair ('sim_emp_corr')
+  File "/Users/jzimmermann/Documents/PHD_Thesis/Python_stuff/My_tvb/Parameter_Exploration/find_ideal_params.py", line 11, in add_corr_to
+    raise Exception("empfc.size != sim_result_sq.size")
+Exception: empfc.size != sim_result_sq.size
+, 'params': {'K12': 0.1, 'K11': 0.5, 'K21': 0.15, 'linear_coupling': 0.2, 'conduction_speed': 80.0}}

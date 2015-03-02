@@ -8,7 +8,7 @@ def add_corr_to(sim_results, empfc):
     for sim_result in sim_results:
         sim_result_sq = sim_result['simfc'].squeeze()
         if (empfc.size != sim_result_sq.size):
-            raise Exception("empfc.size != sim_result_sq.size")
+            raise Exception("empfc.size != sim_result_sq.size: empfc.size = " + str(empfc.size) + ", sim_result_sq.size=" + str(sim_result_sq.size))
         corr = np.corrcoef(np.reshape(empfc, (1,empfc.size)), np.reshape(sim_result_sq, (1,empfc.size)))[0,1] #bc corrcoef returns a matrix of corrs (2x2), we will return a single corr (top right)
         sim_result.update({'sim_emp_corr': corr})
 

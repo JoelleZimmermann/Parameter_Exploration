@@ -21,13 +21,24 @@ def from_file(source_file="nonexistent.zip", instance=None):
 
     reader = ZipReader(source_full_path)
 
-    result.areas         = reader.read_array_from_file("area")
-    result.region_labels = reader.read_array_from_file("centres", dtype=numpy.str, use_cols=(0,))
-    result.centres       = reader.read_array_from_file("centres", use_cols=(1, 2, 3))
-    result.cortical      = reader.read_array_from_file("cortical", dtype=numpy.bool)
-    result.hemispheres   = reader.read_array_from_file("hemisphere", dtype=numpy.bool)
-    result.orientations  = reader.read_array_from_file("orientation")
-    result.tract_lengths = reader.read_array_from_file("tract")
+    # Working with original files from Petra.
+    # result.areas         = reader.read_array_from_file("area")
+    # result.region_labels = reader.read_array_from_file("centres", dtype=numpy.str, use_cols=(0,))
+    # result.centres       = reader.read_array_from_file("centres", use_cols=(1, 2, 3))
+    # result.cortical      = reader.read_array_from_file("cortical", dtype=numpy.bool)
+    # result.hemispheres   = reader.read_array_from_file("hemisphere", dtype=numpy.bool)
+    # result.orientations  = reader.read_array_from_file("orientation")
+    # result.tract_lengths = reader.read_array_from_file("tract")
+    # result.weights       = reader.read_array_from_file("weights")
+
+    # Working with Pauls files (Feb 20
+    # result.areas         = reader.read_array_from_file("area")
+    # result.region_labels = reader.read_array_from_file("centres", dtype=numpy.str, use_cols=(0,))
+    # result.centres       = reader.read_array_from_file("centres", use_cols=(1, 2, 3))
+    # result.cortical      = reader.read_array_from_file("cortical", dtype=numpy.bool)
+    # result.hemispheres   = reader.read_array_from_file("hemisphere", dtype=numpy.bool)
+    # result.orientations  = reader.read_array_from_file("orientation")
+    result.tract_lengths = reader.read_array_from_file("tract_lengths")
     result.weights       = reader.read_array_from_file("weights")
 
     return result

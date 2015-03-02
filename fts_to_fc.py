@@ -23,7 +23,7 @@ def time_with_regions_data_to_fts(sim_result):
 
 
 def fts_to_fc(fts):
-    # Input: ts of regions - ndarray(611, 68
+    # Input: ts of regions - ndarray(611, 68)
     #        R1  R2     R68
     #       1.1, 1.3 .. 68 regions ,
     #       1.2, 2.3 .. 68 regions ,
