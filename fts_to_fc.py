@@ -55,3 +55,14 @@ def add_simfc_to(sim_results):
         sim_result.update({'simfc': simfc})
 
     return sim_results
+
+def convert_sim_result_to_matlab_ready(sim_result_for_ideal_params):
+
+    fts = time_with_regions_data_to_fts(sim_result_for_ideal_params)
+    sim_result_for_ideal_params['time_with_regions_data'] = fts
+
+    return sim_result_for_ideal_params
+
+
+
+

@@ -63,8 +63,8 @@ class Subject_Simulation(object):
 
         # Initialise an Integrator
         # hiss = noise.Additive(nsig=numpy.array([2 ** -10, ])) # if i try with default value of nsig (=1.0), it overflows (nsig is D)
-        hiss = noise.Additive(nsig=numpy.array([1.0]))
-        heunint = integrators.HeunStochastic(noise=hiss) # dt is integration step size, using default
+        hiss = noise.Additive(nsig=numpy.array([0.001]))
+        heunint = integrators.HeunStochastic(noise=hiss, dt=0.05) # dt is integration step size, using default
 
         # Initialise a Simulator -- Model, Connectivity, Integrator, and Monitors.
         sim = simulator.Simulator(model=oscillator, connectivity=self.subject.empsc,

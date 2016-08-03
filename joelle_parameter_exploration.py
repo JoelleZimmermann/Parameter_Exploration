@@ -13,6 +13,7 @@ from find_ideal_params import add_corr_to, add_simfc_to
 # from tvb.simulator.lab import *
 from tvb.simulator import monitors
 from tvb.datatypes import equations
+from fts_to_fc import convert_sim_result_to_matlab_ready
 
 # command line: to add current dir to python path: cd /Users/jzimmermann/Documents/PHD_Thesis/Python_stuff/My_tvb/Parameter_Exploration THEN import sys THEN sys.path.append('.')
 K11= 0.5
@@ -23,24 +24,25 @@ K21= 0.15
 # K12range = numpy.r_[.1:1:.5] # [.1:1:.3]
 # K21range = numpy.r_[.1:1:.5] # [.1:1:.3]
 
-linear_coupling_range = numpy.r_[0.11:0.17:0.01]
-conduction_speed_range = numpy.r_[20.0:120.0:20.0]
+linear_coupling_range = numpy.r_[0.03:0.0301:0.0001] # mine: [0.11:0.17:0.01] paul: [0.05:0.25: 0.01]
+conduction_speed_range = numpy.r_[20.0:40.0:20.0] # mine [20.0:120.0:20.0]
 
 # simulation_length_PE = 5000 # 60 sec
-simulation_length_PE = 5000
+simulation_length_PE = 2000 #5000 #180000
 # simulation_length_sim = 180000 #180sec  #180000/500 = 360 which is bold ts length
-simulation_length_sim = 180000
+simulation_length_sim = 8000 #180000
 # throwaway_length_bold = 20000 # 20000ms
-throwaway_length_bold = 20000
-throwaway_length_pe = 0
-period_length_bold = 500 # 2000 ms
+throwaway_length_bold = 0 #20000
+throwaway_length_pe = 0 # 2000
+period_length_bold = 2000
 period_length_subsample = 3.90625 #<-- 256Hz sampling frequency
 variables_of_interest = [0, 3]
 # linear_coupling = 0.00390625 # petra = .14 # jo = 0.00390625 * (10 ** (-3)) because overflows due to high scs discussed in mailing list
 # conduction_speed = 80
 
 
-subject_ids = ['AA_20120815']
+subject_ids = ['AA_20120815', 'AR_20120813']
+###subject_ids = ['AD']
 
 for subject_id in subject_ids:
 
@@ -61,8 +63,13 @@ for subject_id in subject_ids:
 
     # This is for full 20 mins FC matrix with Paul's SC logged and normalized connectivity
     sub = Subject(id=subject_id, age=None, empsc=None, empfc=None,
-          empsc_path="/Users/jzimmermann/Documents/PHD_Thesis/Pauls_Connectivity_zips/" + subject_id + "_SC.mat.zip",
-          empfc_path="/Users/jzimmermann/Documents/PHD_Thesis/Emp_FC/" + subject_id + "_FC_diag1.mat")
+        empsc_path="/Users/jzimmermann/Documents/PHD_Thesis/Pauls_Connectivity_zips/" + subject_id + "_SC.mat.zip",
+        empfc_path="/Users/jzimmermann/Documents/PHD_Thesis/Emp_FC/" + subject_id + "_FC_diag1.mat")
+
+    # This is for AD subjects with SCs with logged and normalized connectivity:
+    ###sub = Subject(id=subject_id, age=None, empsc=None, empfc=None,
+    ###      empsc_path="/Users/jzimmermann/Documents/AD/Data/" + subject_id + "_conn_norm5.zip",
+    ###      empfc_path="/Users/jzimmermann/Documents/AD/Data/" + subject_id + "_FC.mat")
 
     sub_sim = Subject_Simulation(subject = sub) # creating an instance of class Subject_Simulation = creating a new simulation
 
@@ -110,6 +117,9 @@ for subject_id in subject_ids:
 
     print(sim_result_for_ideal_params) # prints sim_result of the ideal params.
 
+    sim_result_for_ideal_params_mat = convert_sim_result_to_matlab_ready(sim_result_for_ideal_params)
+
     # pickle.dump(sim_result_for_ideal_params,open(subject_id + '_sim_result.pickle','wb')) # saves sim_result_for_ideal_params for a subject in a file
-    pickle.dump(sim_result_for_ideal_params,open(subject_id + '_sim_result_pauls_diag1emp.pickle','wb'))
+    pickle.dump(sim_result_for_ideal_params_mat,open(subject_id + '_test.pickle','wb'))
+
     # b = pickle.load(open('AA_20120815_sim_result_with_corr.pickle','r'))
